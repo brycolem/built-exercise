@@ -1,0 +1,66 @@
+<div class="container-fluid p-5">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Left column content here -->
+            <h3>Past Posts</h3>
+            <table>
+                <tr class="p-2" *ngFor="let post of posts">
+                    <td class="p-1">{{post.timestamp | date}}</td>
+                    <td class="p-1">{{post.title}}</td>
+                </tr>
+            </table>
+
+            <div class="d-flex justify-content-end p-5">
+                <button class="btn btn-outline-primary" type="button" (click)="newOrEditPost(createOrEditPost)">New
+                    Post</button>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <!-- Right column content here -->
+            <div class="p-3" *ngFor="let post of posts">
+                <div class="form-group row">
+                    <h4 class="col-md-2">{{post.timestamp | date}}</h4>
+                    <h4 class="col-md-10">{{post.title}}</h4>
+                </div>
+                <div>{{post.text}}</div>
+                <div>
+                    <button type="button" class="btn btn-outline-primary btn-xs"
+                        (click)="newOrEditPost(createOrEditPost, post)">
+                        <i class="bi bi-trash"></i> Edit
+                    </button>
+                    <button type="button" class="btn btn-xs btn-danger" (click)="deletePost(post.id!)">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #createOrEditPost let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Add Post</h4>
+        <button type="button" class="button-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="postForm">
+            <div class="form-group row">
+                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                    <input formControlName="title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="text" class="col-sm-2 col-form-label">Post</label>
+                <div class="col-sm-10">
+                    <textarea formControlName="text"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="onSubmit(modal)">Post</button>
+    </div>
+</ng-template>

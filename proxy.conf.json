@@ -1,0 +1,6 @@
+{
+    "/posts/bcoleman": {
+        "target": "https://us-central1-mbtcandidate.cloudfunctions.net/",
+        "changeOrigin": true
+    }
+}
