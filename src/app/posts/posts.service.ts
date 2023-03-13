@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Post } from './post';
 
 @Injectable({
@@ -12,8 +12,10 @@ export class PostsService {
 
   constructor(private http: HttpClient) { }
 
-  getPostList(): Observable<any> {
-    return this.http.get(`${this.baseUrl}`);
+  getPostList(): Observable<Post[]> {
+    return this.http.get(`${this.baseUrl}`).pipe(map(
+      (response: any) => response.response
+    ));
   }
 
   createPost(data: Post): Observable<any> {

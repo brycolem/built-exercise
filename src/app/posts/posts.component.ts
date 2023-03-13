@@ -1,8 +1,9 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, RequiredValidator } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PostsService } from './posts.service';
 import { Post } from './post';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-posts',
@@ -11,12 +12,12 @@ import { Post } from './post';
 })
 export class PostsComponent implements OnInit {
   postForm!: FormGroup;
-  posts!: Post[];
+  posts$!: Observable<Post[]>;
 
   constructor(private modalService: NgbModal, private service: PostsService, private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.service.getPostList().subscribe(result => this.posts = result.response);
+    this.posts$ = this.service.getPostList();
   }
 
   newOrEditPost(_modal: any, post: any = {}) {
@@ -31,7 +32,7 @@ export class PostsComponent implements OnInit {
 
   deletePost(id: string) {
     this.service.deletePost(id).subscribe(done => {
-      this.service.getPostList().subscribe(result => this.posts = result.response);
+      this.posts$ = this.service.getPostList();
       console.log(done);
     }
     );
@@ -41,7 +42,7 @@ export class PostsComponent implements OnInit {
     let id = this.postForm?.value?.id;
     if (id) {
       this.service.updatePost(id, this.postForm.value as Post).subscribe(data => {
-        this.service.getPostList().subscribe(result => this.posts = result.response);
+        this.posts$ = this.service.getPostList();
         console.log(data);
         _modal?.close();
       });
@@ -53,7 +54,7 @@ export class PostsComponent implements OnInit {
       console.log(new Date(), this.postForm.value);
       this.service.createPost(this.postForm.value).subscribe(done => {
         _modal?.close();
-        this.service.getPostList().subscribe(result => this.posts = result.response);
+        this.posts$ = this.service.getPostList();
         console.log(done);
       });
     }
