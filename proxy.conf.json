@@ -1,6 +1,6 @@
 {
-    "/posts/bcoleman": {
-        "target": "https://us-central1-mbtcandidate.cloudfunctions.net/",
+    "/api/v1/article": {
+        "target": "http://localhost:8080/",
         "changeOrigin": true
     }
 }

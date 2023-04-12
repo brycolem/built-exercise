@@ -8,16 +8,33 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
+      declarations: [HeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should display the Vaco BUILT logo', () => {
+    const logo = fixture.nativeElement.querySelector('.navbar-brand .font-bold');
+    expect(logo.textContent).toContain('Vaco BUILT');
+  });
+
+  it('should have a login button', () => {
+    const compiled = fixture.nativeElement;
+    const loginButton = compiled.querySelector('#login');
+    expect(loginButton).toBeTruthy();
+    expect(loginButton.textContent).toContain('Login');
+  });
+
+  it('should have a signup button', () => {
+    const compiled = fixture.nativeElement;
+    const signupButton = compiled.querySelector('#signup');
+    expect(signupButton).toBeTruthy();
+    expect(signupButton.textContent).toContain('Signup');
   });
 });

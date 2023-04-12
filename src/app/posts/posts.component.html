@@ -1,6 +1,6 @@
 <div class="container-fluid p-5">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <!-- Left column content here -->
             <h3>Past Posts</h3>
             <table>
@@ -15,23 +15,23 @@
                     Post</button>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             <!-- Right column content here -->
             <div class="p-3" *ngFor="let post of posts$ | async">
                 <div class="form-group row">
                     <h4 class="col-md-2">{{post.timestamp | date}}</h4>
-                    <h4 class="col-md-10">{{post.title}}</h4>
+                    <h4 class="col-md-9">{{post.title}}</h4>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-icon" (click)="newOrEditPost(createOrEditPost, post)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-icon" (click)="deletePost(post.id!)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </div>
-                <div>{{post.text}}</div>
-                <div>
-                    <button type="button" class="btn btn-outline-primary btn-xs"
-                        (click)="newOrEditPost(createOrEditPost, post)">
-                        <i class="bi bi-trash"></i> Edit
-                    </button>
-                    <button type="button" class="btn btn-xs btn-danger" (click)="deletePost(post.id!)">
-                        <i class="bi bi-trash"></i> Delete
-                    </button>
-                </div>
+                <div [innerHTML]="post.text"></div>
+
             </div>
         </div>
     </div>
@@ -39,23 +39,25 @@
 
 <ng-template #createOrEditPost let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Add Post</h4>
-        <button type="button" class="button-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        <h4 class="modal-title">{{ postForm.value.id ? 'Edit Post' : 'Add Post' }}</h4>
+        <button type="button" class="btn btn-outline-secondary btn-round" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <i class="fas fa-times"></i>X
         </button>
     </div>
     <div class="modal-body">
         <form [formGroup]="postForm">
-            <div class="form-group row">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input formControlName="title">
+            <div class="form-group row mb-2">
+                <label for="title" class="col-sm-1 col-form-label text-center">Title</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control w-100" formControlName="title">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="text" class="col-sm-2 col-form-label">Post</label>
-                <div class="col-sm-10">
-                    <textarea formControlName="text"></textarea>
+                <label for="text" class="col-sm-1 col-form-label text-center">Post</label>
+                <div class="col-sm-11">
+                    <ckeditor formControlName="text" [editor]="Editor">
+                    </ckeditor>
                 </div>
             </div>
         </form>

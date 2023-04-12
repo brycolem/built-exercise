@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PostsService } from './posts.service';
 import { Post } from './post';
@@ -11,6 +12,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent implements OnInit {
+  public readonly Editor: any = ClassicEditor;
   postForm!: FormGroup;
   posts$!: Observable<Post[]>;
 
@@ -20,57 +22,40 @@ export class PostsComponent implements OnInit {
     this.posts$ = this.service.getPostList();
   }
 
-  newOrEditPost(_modal: any, post: any = {}) {
-    if (post.id == null) {
-      console.log("new post");
-      this._initalizePost();
-    } else {
-      this._initalizePost(post);
-    }
-    const modalRef = this.modalService.open(_modal, { centered: true });
+  newOrEditPost(_modal: any, post: Post | undefined = undefined) {
+    this._initializePost(post);
+    this.modalService.open(_modal, { centered: true, size: 'xl' });
   }
 
   deletePost(id: string) {
-    this.service.deletePost(id).subscribe(done => {
-      this.posts$ = this.service.getPostList();
-      console.log(done);
-    }
-    );
+    this.service.deletePost(id).subscribe();
   }
+
 
   onSubmit(_modal: any) {
     let id = this.postForm?.value?.id;
     if (id) {
-      this.service.updatePost(id, this.postForm.value as Post).subscribe(data => {
-        this.posts$ = this.service.getPostList();
-        console.log(data);
+      this.service.updatePost(id, this.postForm.value as Post).subscribe(() => {
         _modal?.close();
       });
-    }
-    else {
+    } else {
       const now = new Date();
       const timestamp = now.toLocaleString('en-US', { timeZoneName: 'short' });
       this.postForm?.get('timestamp')?.setValue(timestamp);
       console.log(new Date(), this.postForm.value);
-      this.service.createPost(this.postForm.value).subscribe(done => {
+      this.service.createPost(this.postForm.value).subscribe(() => {
         _modal?.close();
-        this.posts$ = this.service.getPostList();
-        console.log(done);
       });
     }
   }
 
-  private _initalizePost(post: any = undefined) {
+  private _initializePost(post: Post | undefined = undefined) {
     this.postForm = this.fb.group({
-      title: [''],
-      text: [''],
-      timestamp: ['']
+      id: [post?.id || null],
+      title: [post?.title || ''],
+      text: [post?.text || ''],
+      timestamp: [post?.timestamp || '']
     });
-    if (post?.id != null) {
-      for (let key in post) {
-        this.postForm.addControl(key, new FormControl([post[key]]));
-        this.postForm?.get(key)?.setValue(post[key]);
-      };
-    }
   }
+
 }
