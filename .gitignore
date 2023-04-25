@@ -37,6 +37,7 @@ yarn-error.log
 testem.log
 /typings
 backend/pickle_jar/
+.terraform/providers/
 
 # System files
 .DS_Store

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: built-frontend
+  namespace: built-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: built-frontend
+  template:
+    metadata:
+      labels:
+        app: built-frontend
+    spec:
+      containers:
+        - name: built-frontend
+          image: localhost:5001/built-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3087
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config

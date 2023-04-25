@@ -1,10 +1,8 @@
-FROM node:lts
+FROM nginx:1.21-alpine
 
-EXPOSE 4200
-CMD ["ng", "serve", "--host", "0.0.0.0", "--proxy-config", "proxy.conf.json"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-WORKDIR /built
+RUN rm /etc/nginx/conf.d/default.conf
 
-COPY . .
-
-RUN npm install @angular/cli -g
+COPY dist/built-exercise /usr/share/nginx/html

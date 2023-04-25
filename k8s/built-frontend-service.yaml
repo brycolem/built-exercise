@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: built-demo
+spec:
+  selector:
+    app: built-frontend
+  ports:
+    - port: 3087
+      targetPort: 3087
+  type: LoadBalancer
